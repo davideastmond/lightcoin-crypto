@@ -1,25 +1,20 @@
 class Transaction {
-  constructor(amount, account) {
+  constructor(amount) {
     this.amount  = amount;
-    this.account = account;
-  }
-  commit() {
-    this.account.balance += this.value;
+    this.transactionHistory = [];
+    
   }
 }
 class Withdrawal extends Transaction {
-   // Pass in the account that the withdrawal this for
-
+  
   // Update the balance in the account
   get value () {
     return this.amount * -1;
   }
- 
+  
 }
 
 class Deposit extends Transaction {
-  // Pass in the account that the deposit this for
-  
 
   // Update the balance in the account
   get value () {
@@ -33,7 +28,12 @@ class Account {
   constructor(username) {
     this.username = username;
     // Have the account balance start at $0 since that makes more sense.
-    this.balance = 500.00;
+    this.balance = 0;
+    this.transactionHistory = [];
+  }
+
+  commitTransaction(p_transaction) {
+
   }
 
 }
@@ -41,9 +41,9 @@ class Account {
 // DRIVER CODE BELOW
 // We use the code below to "drive" the application logic above and make sure it's working as expected
 const myAccount = new Account("snow-patrol");
-
+console.log("Initial balance of my account: ", myAccount.balance);
 t1 = new Withdrawal(50.25, myAccount);
-
+console.log(typeof t1);
 console.log('Transaction 1:', t1.value);
 
 t2 = new Withdrawal(9.99, myAccount);
