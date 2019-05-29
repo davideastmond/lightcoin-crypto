@@ -1,27 +1,29 @@
-class Withdrawal {
-   // Pass in the account that the withdrawal this for
-   constructor(amount, account) {
-    this.amount = amount;
+class Transaction {
+  constructor(amount, account) {
+    this.amount  = amount;
     this.account = account;
   }
+  commit() {
+    this.account.balance += this.value;
+  }
+}
+class Withdrawal extends Transaction {
+   // Pass in the account that the withdrawal this for
 
   // Update the balance in the account
-  commit() {
-    this.account.balance -= this.amount;
+  get value () {
+    return this.amount * -1;
   }
-
+ 
 }
 
-class Deposit {
+class Deposit extends Transaction {
   // Pass in the account that the deposit this for
-  constructor(amount, account) {
-    this.amount = amount;
-    this.account = account;
-  }
+  
 
   // Update the balance in the account
-  commit() {
-    this.account.balance += this.amount;
+  get value () {
+    return this.amount;
   }
 
 }
@@ -41,14 +43,14 @@ class Account {
 const myAccount = new Account("snow-patrol");
 
 t1 = new Withdrawal(50.25, myAccount);
-t1.commit();
-console.log('Transaction 1:', t1);
+
+console.log('Transaction 1:', t1.value);
 
 t2 = new Withdrawal(9.99, myAccount);
-t2.commit();
-console.log('Transaction 2:', t2);
+
+console.log('Transaction 2:', t2.value);
 
 t3 = new Deposit(120.00, myAccount);
-t3.commit();
-console.log('Transaction 3:', t3);
+
+console.log('Transaction 3:', t3.value);
 console.log('Balance:', myAccount.balance);
