@@ -1,8 +1,6 @@
 class Transaction {
   constructor(amount) {
     this.amount  = amount;
-    this.transactionHistory = [];
-    
   }
 }
 class Withdrawal extends Transaction {
@@ -11,7 +9,9 @@ class Withdrawal extends Transaction {
   get value () {
     return this.amount * -1;
   }
-  
+  get type () {
+    return "Withdrawal";
+  }
 }
 
 class Deposit extends Transaction {
@@ -21,6 +21,9 @@ class Deposit extends Transaction {
     return this.amount;
   }
 
+  get type () {
+    return "Desposit";
+  }
 }
 
 class Account {
@@ -33,9 +36,23 @@ class Account {
   }
 
   commitTransaction(p_transaction) {
-
+    switch (p_transaction.type) {
+      case "Deposit":
+        this.balance += p_transaction.value;
+        this.transactionHistory.push({ type: p_transaction.type, amount: p_transaction.value, status: "OK"});
+        break;
+      case "Withdrawal":
+        if (this.balance <= p_transaction.value) {
+          this.balance += p_transaction.value;
+          this.transactionHistory.push({ type: p_transaction.type, amount: p_transaction.value, status: "OK"});
+        } else {
+          this.transactionHistory.push({ type: p_transaction.type, amount: p_transaction.value, status: "Declined"});
+        }
+        break;
+      default:
+        console.log("Invalid transaction type.");
+    }
   }
-
 }
 
 // DRIVER CODE BELOW
@@ -43,14 +60,8 @@ class Account {
 const myAccount = new Account("snow-patrol");
 console.log("Initial balance of my account: ", myAccount.balance);
 t1 = new Withdrawal(50.25, myAccount);
-console.log(typeof t1);
-console.log('Transaction 1:', t1.value);
 
-t2 = new Withdrawal(9.99, myAccount);
+myAccount.commitTransaction(t1);
+console.log(myAccount.transactionHistory);
+console.log("Balance is ", myAccount.balance);
 
-console.log('Transaction 2:', t2.value);
-
-t3 = new Deposit(120.00, myAccount);
-
-console.log('Transaction 3:', t3.value);
-console.log('Balance:', myAccount.balance);
